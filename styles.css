@@ -36,17 +36,16 @@ button {
 button:disabled {
     background-color: #ccc;
 }
-
-#startRecord {
+#controlButton {
     background-color: #28a745;
     color: white;
+    font-size: 24px;
 }
-
-#stopRecord {
+#stopButton {
     background-color: #dc3545;
     color: white;
+    font-size: 24px;
 }
-
 #downloadAudio {
     background-color: #007bff;
     color: white;

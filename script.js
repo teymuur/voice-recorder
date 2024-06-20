@@ -2,33 +2,60 @@ let mediaRecorder;
 let audioChunks = [];
 let audioBlob;
 let audioUrl;
+let recording = false;
+let paused = false;
 
-document.getElementById('startRecord').addEventListener('click', async () => {
-    let stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    mediaRecorder = new MediaRecorder(stream);
-    mediaRecorder.start();
+const controlButton = document.getElementById('controlButton');
+const controlIcon = document.getElementById('controlIcon');
+const stopButton = document.getElementById('stopButton');
+const audioPlayer = document.getElementById('audioPlayer');
 
-    mediaRecorder.ondataavailable = event => {
-        audioChunks.push(event.data);
-    };
+controlButton.addEventListener('click', async () => {
+    if (!recording) {
+        // Start recording
+        let stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.start();
 
-    mediaRecorder.onstop = () => {
-        audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-        audioUrl = URL.createObjectURL(audioBlob);
-        document.getElementById('audioPlayer').src = audioUrl;
-        audioChunks = [];
-        document.getElementById('downloadAudio').disabled = false;
-        document.getElementById('convertText').disabled = false;
-    };
+        mediaRecorder.ondataavailable = event => {
+            audioChunks.push(event.data);
+        };
 
-    document.getElementById('startRecord').disabled = true;
-    document.getElementById('stopRecord').disabled = false;
+        mediaRecorder.onstop = () => {
+            audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+            audioUrl = URL.createObjectURL(audioBlob);
+            audioPlayer.src = audioUrl;
+            audioChunks = [];
+            document.getElementById('downloadAudio').disabled = false;
+            document.getElementById('convertText').disabled = false;
+        };
+
+        controlIcon.className = 'fas fa-pause';
+        recording = true;
+        paused = false;
+        stopButton.disabled = false;
+    } else {
+        // Toggle pause/resume
+        if (paused) {
+            mediaRecorder.resume();
+            controlIcon.className = 'fas fa-pause';
+            paused = false;
+        } else {
+            mediaRecorder.pause();
+            controlIcon.className = 'fas fa-microphone';
+            paused = true;
+        }
+    }
 });
 
-document.getElementById('stopRecord').addEventListener('click', () => {
-    mediaRecorder.stop();
-    document.getElementById('startRecord').disabled = false;
-    document.getElementById('stopRecord').disabled = true;
+stopButton.addEventListener('click', () => {
+    // Stop recording
+    if (recording && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+        controlIcon.className = 'fas fa-microphone';
+        recording = false;
+        stopButton.disabled = true;
+    }
 });
 
 document.getElementById('downloadAudio').addEventListener('click', () => {

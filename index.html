@@ -5,18 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online Sound Recorder</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <div class="container">
         <h1>Online Sound Recorder</h1>
-        <button id="startRecord">Start Recording</button>
-        <button id="stopRecord" disabled>Stop Recording</button>
+        <button id="controlButton"><i id="controlIcon" class="fas fa-microphone"></i></button>
+        <button id="stopButton" disabled><i class="fas fa-stop"></i></button>
         <h2>Recorded Audio:</h2>
         <audio id="audioPlayer" controls></audio>
         <button id="downloadAudio" disabled>Download Recording</button>
         <button id="convertText" disabled>Convert to Text</button>
         <h2>Transcription:</h2>
-        <textarea readonly id="transcription"  rows="10" cols="10"></textarea>
+        <textarea id="transcription" rows="10" cols="50"></textarea>
     </div>
 
     <script src="script.js"></script>
